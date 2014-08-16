@@ -13,8 +13,25 @@ exports.headers = headers = {
 exports.serveAssets = function(res, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
+  var filePath = JSON.stringify(archive.paths.archivedSites);
+  console.log(filePath, "is the file path");
+  var files = []; //needs to be populated with files from filePath
+  var webistes = fs.readdir(filePath, function(err, files){
+      if(err){return console.log("file not found");}
+        return files;
+  });
+  for (var i = 0; i < webistes.length; i++) {
+    if(asset === webistes[i]){
+      return asset; //returns an HTML file
+    }
+  }
 };
 
 
+exports.sendResponse = function(res, data, status){
 
+  status = status || 200;
+  res.writeHead(status, headers);
+  res.end(JSON.stringify(data));
+};
 // As you progress, keep thinking about what helper functions you can put here!
