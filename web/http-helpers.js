@@ -22,15 +22,22 @@ exports.grabFile = function(res, url, callback) {
         var fileName = archive.paths.archivedSites.concat("/",websites[i]);
         
         return fileName;
-      }
+      } 
+      else{return null;}
     }
   }
 };
 
+exports.redirect = function(res, page){
+  var status = 302;
+  //location header
+  headers.location = archive.paths.siteAssets.concat("/", page);
+  res.writeHead(status, headers);
+  res.end();
+}
 
 exports.sendResponse = function(res, data, status){
-
-  status = status || 200;
+  var status = status || 200;
   res.writeHead(status, headers);
   res.end(JSON.stringify(data));
 };
@@ -43,4 +50,22 @@ exports.serveAssets = function(res, asset, callback) {
   res.end(asset);
  
 };
+
+exports.readFiles = function(res, filename, encoding){
+  fs.readFile(filename, encoding, function(err, data){
+    if(err){throw err;}
+      exports.serveAssets(res, data);
+  });
+};
 // As you progress, keep thinking about what helper functions you can put here!
+
+
+
+//function (callback(){
+//data = thiss
+//readfile();
+//redirect()
+//})
+
+//redirect()
+//

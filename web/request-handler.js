@@ -11,7 +11,7 @@ var fs = require('fs');
 
 
 exports.handleRequest = function (req, res) {
-  //console.log(req); 
+  console.log(req._postData); 
   var statusCode;
   //console.log(archive.paths.archivedSites);
   var simpleUrl = req.url.slice(1);
@@ -24,6 +24,13 @@ exports.handleRequest = function (req, res) {
           utils.sendResponse(res,"<input>");//*****write in data later
           break;
         case "POST":
+          var scrapeUrl = req._postData.url;
+          console.log(scrapeUrl, "new url data");
+          archive.addUrlToList(scrapeUrl, function(){
+            //redirect to result
+          });
+          //redirect to loading.html page
+          utils.redirect(res, "loading.html");
 
           break;
         case "OPTIONS":
@@ -35,11 +42,14 @@ exports.handleRequest = function (req, res) {
       switch(req.method){
         case "GET":
         var file = utils.grabFile(res, simpleUrl);
-        fs.readFile(file, 'utf8', function(err, data){
-          if(err) throw err;
-          utils.serveAssets(res, data, function(){
-          });
-        });
+
+      console.log(file, "line 39");
+        if(file === null){
+          utils.sendResponse(res, null, 404);
+        }
+        else {
+          utils.readFiles(res, file, 'utf8');
+        }
 
         break;
         case "OPTIONS":
