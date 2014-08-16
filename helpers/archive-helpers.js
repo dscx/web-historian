@@ -25,17 +25,51 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(){
+exports.readListOfUrls = function(url, callback){
+  //open file provided
+  var result;
+    fs.readFile(exports.paths.list, 'utf8', function(err, data){
+      if(err){throw err;}
+      result = data;
+      console.log("line 34 about to CALLBACK");
+      callback(result);
+    });
+  //return result;
+    //return url or number?
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url, callback){
+  //go through sites.txt searching for url
+  var exists = false;
+  exports.readListOfUrls(url, function(list){
+    if(list.indexOf(url) > -1){
+    console.log("line 45 IF BLOCK");
+      exists = true;
+    }
+    callback(exists);
+  });
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url, callback){
+  //should run isUrlInList
+  exports.isUrlInList(url, function(bool){
+    if(bool === false){
+      url = url.concat("\n"); ///WHY???
+      fs.appendFile(exports.paths.list, url, "utf8", function(err){
+        if(err){throw err;}
+        //send response ?
+      }); 
+    }
+    //when it's true
+    else{console.log("all done");}
+  });
+  
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(url){
+  // this is part of our GrabFile fn
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(url){
+  //site scraper
 };
