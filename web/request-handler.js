@@ -2,6 +2,7 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var utils = require('./http-helpers');
 var parseUrl = require('url');
+var fs = require('fs');
 // require more modules/folders here!
 
 
@@ -33,10 +34,13 @@ exports.handleRequest = function (req, res) {
     else
       switch(req.method){
         case "GET":
-        utils.serveAssets(res, simpleUrl, function(){
-          console.log("file delivered");
+        var file = utils.grabFile(res, simpleUrl);
+        fs.readFile(file, 'utf8', function(err, data){
+          if(err) throw err;
+          utils.serveAssets(res, data, function(){
+          });
         });
-        utils.sendResponse(res); //simpleUrl
+
         break;
         case "OPTIONS":
         utils.sendResponse(res);
@@ -49,6 +53,8 @@ exports.handleRequest = function (req, res) {
 
 /*
 
+
+2014-07-web-historian/archives/sites/www.google.com
 
 archive.archivedSites = the folder with archived sites
 if req.url === a name of file in path.arch... then

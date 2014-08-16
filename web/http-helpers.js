@@ -10,19 +10,19 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
+exports.grabFile = function(res, url, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
-  var filePath = JSON.stringify(archive.paths.archivedSites);
-  console.log(filePath, "is the file path");
-  var files = []; //needs to be populated with files from filePath
-  var webistes = fs.readdir(filePath, function(err, files){
-      if(err){return console.log("file not found");}
-        return files;
-  });
-  for (var i = 0; i < webistes.length; i++) {
-    if(asset === webistes[i]){
-      return asset; //returns an HTML file
+  console.log(archive.paths.archivedSites, "is the file path");
+  var websites = fs.readdirSync(archive.paths.archivedSites);
+  if(websites !== undefined){
+    for (var i = 0; i < websites.length; i++) {
+      if(websites[i] === url){
+        console.log(archive.paths.archivedSites.concat("/",websites[i]),"file name");
+        var fileName = archive.paths.archivedSites.concat("/",websites[i]);
+        
+        return fileName;
+      }
     }
   }
 };
@@ -33,5 +33,14 @@ exports.sendResponse = function(res, data, status){
   status = status || 200;
   res.writeHead(status, headers);
   res.end(JSON.stringify(data));
+};
+
+exports.serveAssets = function(res, asset, callback) {
+  // Write some code here that helps serve up your static files!
+  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
+  var status = 200;
+  res.writeHead(status, headers);
+  res.end(asset);
+ 
 };
 // As you progress, keep thinking about what helper functions you can put here!
