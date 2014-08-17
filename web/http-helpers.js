@@ -11,14 +11,11 @@ exports.headers = headers = {
 };
 
 exports.grabFile = function(res, url, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
-  console.log(archive.paths.archivedSites, "is the file path");
   var websites = fs.readdirSync(archive.paths.archivedSites);
   if(websites !== undefined){
     for (var i = 0; i < websites.length; i++) {
       if(websites[i] === url){
-        console.log(archive.paths.archivedSites.concat("/",websites[i]),"file name");
+       // console.log(archive.paths.archivedSites.concat("/",websites[i]),"file name");
         var fileName = archive.paths.archivedSites.concat("/",websites[i]);
         
         return fileName;

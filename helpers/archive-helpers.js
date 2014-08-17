@@ -24,17 +24,19 @@ exports.initialize = function(pathsObj){
 
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
-
-exports.readListOfUrls = function(url, callback){
+exports.readListOfUrls = function(url, callback){ //url is optional?
   //open file provided
   var result;
     fs.readFile(exports.paths.list, 'utf8', function(err, data){
       if(err){throw err;}
       result = data;
-      console.log("line 34 about to CALLBACK");
-      callback(result);
+      if(callback){
+        callback(result);
+      }else{
+        return result;
+      }
     });
-  //return result;
+  return result;
     //return url or number?
 };
 
@@ -43,18 +45,18 @@ exports.isUrlInList = function(url, callback){
   var exists = false;
   exports.readListOfUrls(url, function(list){
     if(list.indexOf(url) > -1){
-    console.log("line 45 IF BLOCK");
       exists = true;
     }
     callback(exists);
   });
 };
 
-exports.addUrlToList = function(url, callback){
+exports.addUrlToList = function(url){
   //should run isUrlInList
   exports.isUrlInList(url, function(bool){
     if(bool === false){
-      url = url.concat("\n"); ///WHY???
+    //  url = url.concat("\n");
+      url = url + " ";
       fs.appendFile(exports.paths.list, url, "utf8", function(err){
         if(err){throw err;}
         //send response ?
@@ -68,6 +70,15 @@ exports.addUrlToList = function(url, callback){
 
 exports.isURLArchived = function(url){
   // this is part of our GrabFile fn
+  var websites = fs.readdirSync(archive.paths.archivedSites);
+  if(websites !== undefined){
+    for (var i = 0; i < websites.length; i++) {
+      if(websites[i] === url){
+        return true;
+      } 
+      else{return false;}
+    }
+  }
 };
 
 exports.downloadUrls = function(url){

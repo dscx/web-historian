@@ -11,7 +11,7 @@ var fs = require('fs');
 
 
 exports.handleRequest = function (req, res) {
-  console.log(req._postData); 
+  //console.log(req._postData); 
   var statusCode;
   //console.log(archive.paths.archivedSites);
   var simpleUrl = req.url.slice(1);
@@ -25,7 +25,7 @@ exports.handleRequest = function (req, res) {
           break;
         case "POST":
           var scrapeUrl = req._postData.url;
-          console.log(scrapeUrl, "new url data");
+        
           archive.addUrlToList(scrapeUrl, function(){
             //redirect to result
           });
@@ -42,8 +42,6 @@ exports.handleRequest = function (req, res) {
       switch(req.method){
         case "GET":
         var file = utils.grabFile(res, simpleUrl);
-
-      console.log(file, "line 39");
         if(file === null){
           utils.sendResponse(res, null, 404);
         }
